@@ -26,7 +26,6 @@ I use the latest feature of javascript. ES6 + ES7, we compile with the help of b
 
 ### Part 1, Setup the tools
 
-#### Video
 
 
 #### To add
@@ -41,7 +40,6 @@ I use the latest feature of javascript. ES6 + ES7, we compile with the help of b
 
 ### Part 2, Setup of the middlewares and mongodb
 
-#### Video
 
 
 - Add mongoose, body-parser, morgan, compression, helmet
@@ -63,8 +61,6 @@ I use the latest feature of javascript. ES6 + ES7, we compile with the help of b
 
 ### Part 4, Add bcrypt and passport
 
-#### Video
-
 
 - Add rimraf and clean dist on webpack build
 - Crypt the user password
@@ -74,8 +70,6 @@ I use the latest feature of javascript. ES6 + ES7, we compile with the help of b
 ---
 
 ### Part 5, Add passport-jwt and send less information about the user
-
-#### Video
 
 
 - Create a secret password for the jwt
@@ -87,8 +81,6 @@ I use the latest feature of javascript. ES6 + ES7, we compile with the help of b
 
 ### Part 6, Creation of a post
 
-#### Video
-
 
 - Create the post model
 - Add the user id as the author
@@ -97,8 +89,6 @@ I use the latest feature of javascript. ES6 + ES7, we compile with the help of b
 ---
 
 ### Part 7, Get a post by his id
-
-#### Video
 
 
 - Create the controller, route
@@ -110,8 +100,6 @@ I use the latest feature of javascript. ES6 + ES7, we compile with the help of b
 
 ### Part 8, Get all posts with a list statics method
 
-#### Video
-
 
 - Talk about the repos
 - Create the controller
@@ -121,8 +109,6 @@ I use the latest feature of javascript. ES6 + ES7, we compile with the help of b
 
 ### Part 9, Update a post if author of it
 
-#### Video
-
 
 - Create the route and controller
 - Create a validation field
@@ -130,8 +116,6 @@ I use the latest feature of javascript. ES6 + ES7, we compile with the help of b
 ---
 
 ### Part 10, Delete a post if author of it
-
-#### Video
 
 
 - Create the route and controller
@@ -142,15 +126,11 @@ I use the latest feature of javascript. ES6 + ES7, we compile with the help of b
 
 ### Part 11, User can favorite a post if auth + increment the favoriteCount
 
-#### Video
-
 
 - Create model methods for both user and post
 - Add the increment/decrement statics on post
 
 ### Part 12, Send if favorite or not with post for help the life of the front-end
-
-#### Video
 
 
 - Make route auth
