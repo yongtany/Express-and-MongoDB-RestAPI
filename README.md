@@ -26,8 +26,6 @@ I use the latest feature of javascript. ES6 + ES7, we compile with the help of b
 
 ### Part 1, Setup the tools
 
-
-
 #### To add
 
 - editorconfig
@@ -39,8 +37,6 @@ I use the latest feature of javascript. ES6 + ES7, we compile with the help of b
 ---
 
 ### Part 2, Setup of the middlewares and mongodb
-
-
 
 - Add mongoose, body-parser, morgan, compression, helmet
 - Setup config folder
