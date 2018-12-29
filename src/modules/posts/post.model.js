@@ -68,8 +68,13 @@ PostSchema.statics = {
   },
   list({ skip = 0, limit = 5 } = {}) {
     return this.find()
+<<<<<<< HEAD
     .sort({ createdAt: -1 }) // 내림차순
     .skip(skip)
+=======
+    .sort({ createAt: -1 }) // 내림차순
+    .skip(skip) // 시작부분 설정
+>>>>>>> cb217ea3476cd8d12ec4a9dac16b86e45b2656c7
     .limit(limit)
     .populate('user');
   }

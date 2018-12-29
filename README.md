@@ -46,9 +46,6 @@ I use the latest feature of javascript. ES6 + ES7, we compile with the help of b
 
 ### Part 3, Users creation
 
-#### Video
-
-
 - Create the user model, controller and routes
 - Install robomongo, postman
 - Add joi for validation with express-validation
