@@ -19,15 +19,15 @@ app.get('/', (req, res) => {
 apiRoutes(app);
 
 app.listen(constants.PORT, err => {
-    if(err) {
-        throw err;
-    } else {
-        console.log(`
+  if (err) {
+    throw err;
+  } else {
+    console.log(`
         Server runnging on port: ${constants.PORT}
         ---
         Running on ${process.env.NODE_ENV}
         ---
         Make something great!!!
         `);
-    }
+  }
 });

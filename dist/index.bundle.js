@@ -524,23 +524,23 @@ const app = (0, _express2.default)(); /* eslint-disable no-consle */
 (0, _middlewares2.default)(app);
 
 app.get('/', (req, res) => {
-    res.send('Set up complete!');
+  res.send('Set up complete!');
 });
 
 (0, _modules2.default)(app);
 
 app.listen(_constants2.default.PORT, err => {
-    if (err) {
-        throw err;
-    } else {
-        console.log(`
+  if (err) {
+    throw err;
+  } else {
+    console.log(`
         Server runnging on port: ${_constants2.default.PORT}
         ---
         Running on ${process.env.NODE_ENV}
         ---
         Make something great!!!
         `);
-    }
+  }
 });
 
 /***/ }),
@@ -557,6 +557,7 @@ exports.createPost = createPost;
 exports.getPostById = getPostById;
 exports.getPostsList = getPostsList;
 exports.updatePost = updatePost;
+exports.deletePost = deletePost;
 
 var _httpStatus = __webpack_require__(7);
 
@@ -616,12 +617,115 @@ async function updatePost(req, res) {
   }
 }
 
+async function deletePost(req, res) {
+  try {
+    const post = await _post2.default.findById(req.params.id);
+
+    if (!post.user.equals(req.user._id)) {
+      return res.sendStatus(_httpStatus2.default.UNAUTHORIZED);
+    }
+
+    await post.remove();
+    return res.sendStatus(_httpStatus2.default.OK);
+  } catch (e) {
+    return res.status(_httpStatus2.default.BAD_REQUEST).json(e);
+  }
+}
+
 /***/ }),
 /* 16 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-throw new Error("Module build failed: SyntaxError: Unexpected token (71:2)\n\n\u001b[0m \u001b[90m 69 | \u001b[39m  list({ skip \u001b[33m=\u001b[39m \u001b[35m0\u001b[39m\u001b[33m,\u001b[39m limit \u001b[33m=\u001b[39m \u001b[35m5\u001b[39m } \u001b[33m=\u001b[39m {}) {\n \u001b[90m 70 | \u001b[39m    \u001b[36mreturn\u001b[39m \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mfind()\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 71 | \u001b[39m\u001b[33m<<\u001b[39m\u001b[33m<<\u001b[39m\u001b[33m<<\u001b[39m\u001b[33m<\u001b[39m \u001b[33mHEAD\u001b[39m\n \u001b[90m    | \u001b[39m  \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 72 | \u001b[39m    \u001b[33m.\u001b[39msort({ createdAt\u001b[33m:\u001b[39m \u001b[33m-\u001b[39m\u001b[35m1\u001b[39m }) \u001b[90m// 내림차순\u001b[39m\n \u001b[90m 73 | \u001b[39m    \u001b[33m.\u001b[39mskip(skip)\n \u001b[90m 74 | \u001b[39m\u001b[33m===\u001b[39m\u001b[33m===\u001b[39m\u001b[33m=\u001b[39m\u001b[0m\n");
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _mongoose = __webpack_require__(2);
+
+var _mongoose2 = _interopRequireDefault(_mongoose);
+
+var _slug = __webpack_require__(29);
+
+var _slug2 = _interopRequireDefault(_slug);
+
+var _mongooseUniqueValidator = __webpack_require__(9);
+
+var _mongooseUniqueValidator2 = _interopRequireDefault(_mongooseUniqueValidator);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+const PostSchema = new _mongoose.Schema({
+  title: {
+    type: String,
+    trim: true,
+    required: [true, 'Title is required'],
+    minlength: [3, 'Title need to be Longer'],
+    unique: true
+  },
+  text: {
+    type: String,
+    trim: true,
+    required: [true, 'Text is required'],
+    minlength: [10, 'Text need to be longer']
+  },
+  slug: {
+    type: String,
+    trim: true,
+    lowercase: true
+  },
+  user: {
+    type: _mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  favoriteCount: {
+    type: Number,
+    default: 0
+  }
+}, { timestamps: true });
+
+PostSchema.plugin(_mongooseUniqueValidator2.default, {
+  message: '{VALUE} already taken!'
+});
+
+PostSchema.pre('validate', function (next) {
+  this._slugify();
+
+  next();
+});
+
+PostSchema.methods = {
+  _slugify() {
+    this.slug = (0, _slug2.default)(this.title);
+  },
+  toJSON() {
+    return {
+      _id: this._id,
+      title: this.title,
+      text: this.text,
+      createAt: this.createdAt,
+      slug: this.slug,
+      user: this.user,
+      favoriteCount: this.favoriteCount
+    };
+  }
+};
+
+PostSchema.statics = {
+  createPost(args, user) {
+    return this.create(Object.assign({}, args, {
+      user
+    }));
+  },
+  list({ skip = 0, limit = 5 } = {}) {
+    return this.find().sort({ createdAt: -1 }) // 내림차순
+    .skip(skip).limit(limit).populate('user');
+  }
+};
+
+exports.default = _mongoose2.default.model('Post', PostSchema);
 
 /***/ }),
 /* 17 */
@@ -663,6 +767,8 @@ routes.get('/:id', postController.getPostById);
 routes.get('/', postController.getPostsList);
 
 routes.patch('/:id', _auth.authJwt, (0, _expressValidation2.default)(_post3.default.updatePost), postController.updatePost);
+
+routes.delete('/:id', _auth.authJwt, postController.deletePost);
 
 exports.default = routes;
 
@@ -823,7 +929,12 @@ module.exports = require("passport-jwt");
 module.exports = require("passport-local");
 
 /***/ }),
-/* 29 */,
+/* 29 */
+/***/ (function(module, exports) {
+
+module.exports = require("slug");
+
+/***/ }),
 /* 30 */
 /***/ (function(module, exports) {
 

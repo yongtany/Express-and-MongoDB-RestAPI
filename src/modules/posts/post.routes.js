@@ -31,4 +31,10 @@ routes.patch(
   postController.updatePost
 );
 
+routes.delete(
+  '/:id',
+  authJwt,
+  postController.deletePost
+);
+
 export default routes;

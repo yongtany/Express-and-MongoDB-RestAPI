@@ -4,8 +4,6 @@ import compression from 'compression';
 import helmet from 'helmet';
 import passport from 'passport';
 
-
-
 const isDev = process.env.NODE_ENV === 'development';
 const isProd = process.env.NODE_ENV === 'production';
 
