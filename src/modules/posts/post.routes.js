@@ -37,4 +37,7 @@ routes.delete(
   postController.deletePost
 );
 
+// Favorites
+routes.post('/:id/favorite', authJwt, postController.favoritePost);
+
 export default routes;

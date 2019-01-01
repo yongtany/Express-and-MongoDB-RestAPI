@@ -9,7 +9,7 @@ mongoose.Promise = global.Promise;
 
 // Connect the db with the url provide
 try {
-  mongoose.connect(constants.MONGO_URL);
+  mongoose.connect(constants.MONGO_URL, { useNewUrlParser: true });
 } catch (err) {
   mongoose.createConnection(constants.MONGO_URL);
 }

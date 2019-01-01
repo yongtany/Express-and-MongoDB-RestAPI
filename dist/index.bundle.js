@@ -115,12 +115,6 @@ module.exports = require("express");
 
 /***/ }),
 /* 2 */
-/***/ (function(module, exports) {
-
-module.exports = require("mongoose");
-
-/***/ }),
-/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -130,7 +124,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _mongoose = __webpack_require__(2);
+var _mongoose = __webpack_require__(3);
 
 var _mongoose2 = _interopRequireDefault(_mongoose);
 
@@ -147,6 +141,10 @@ var _jsonwebtoken2 = _interopRequireDefault(_jsonwebtoken);
 var _mongooseUniqueValidator = __webpack_require__(9);
 
 var _mongooseUniqueValidator2 = _interopRequireDefault(_mongooseUniqueValidator);
+
+var _post = __webpack_require__(16);
+
+var _post2 = _interopRequireDefault(_post);
 
 var _user = __webpack_require__(4);
 
@@ -196,6 +194,12 @@ const UserSchema = new _mongoose.Schema({
       },
       message: '{VAlUE} is not a valid password'
     }
+  },
+  favorites: {
+    posts: [{
+      type: _mongoose.Schema.Types.ObjectId,
+      ref: 'Post'
+    }]
   }
 }, { timestamps: true });
 
@@ -236,10 +240,30 @@ UserSchema.methods = {
       _id: this._id,
       userName: this.userName
     };
+  },
+
+  _favorites: {
+    async posts(postId) {
+      if (this.favorites.posts.indexOf(postId) >= 0) {
+        this.favorites.posts.remove(postId);
+        await _post2.default.decFavoriteCount(postId);
+      } else {
+        this.favorites.posts.push(postId);
+        await _post2.default.incFavoriteCount(postId);
+      }
+
+      return this.save();
+    }
   }
 };
 
 exports.default = _mongoose2.default.model('User', UserSchema);
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports) {
+
+module.exports = require("mongoose");
 
 /***/ }),
 /* 4 */
@@ -295,7 +319,7 @@ var _passportLocal2 = _interopRequireDefault(_passportLocal);
 
 var _passportJwt = __webpack_require__(27);
 
-var _user = __webpack_require__(3);
+var _user = __webpack_require__(2);
 
 var _user2 = _interopRequireDefault(_user);
 
@@ -389,7 +413,7 @@ module.exports = require("passport");
 "use strict";
 
 
-var _mongoose = __webpack_require__(2);
+var _mongoose = __webpack_require__(3);
 
 var _mongoose2 = _interopRequireDefault(_mongoose);
 
@@ -406,7 +430,7 @@ _mongoose2.default.Promise = global.Promise;
 
 // Connect the db with the url provide
 try {
-  _mongoose2.default.connect(_constants2.default.MONGO_URL);
+  _mongoose2.default.connect(_constants2.default.MONGO_URL, { useNewUrlParser: true });
 } catch (err) {
   _mongoose2.default.createConnection(_constants2.default.MONGO_URL);
 }
@@ -558,6 +582,7 @@ exports.getPostById = getPostById;
 exports.getPostsList = getPostsList;
 exports.updatePost = updatePost;
 exports.deletePost = deletePost;
+exports.favoritePost = favoritePost;
 
 var _httpStatus = __webpack_require__(7);
 
@@ -566,6 +591,10 @@ var _httpStatus2 = _interopRequireDefault(_httpStatus);
 var _post = __webpack_require__(16);
 
 var _post2 = _interopRequireDefault(_post);
+
+var _user = __webpack_require__(2);
+
+var _user2 = _interopRequireDefault(_user);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -632,6 +661,17 @@ async function deletePost(req, res) {
   }
 }
 
+async function favoritePost(req, res) {
+  try {
+    const user = await _user2.default.findById(req.user._id);
+    await user._favorites.posts(req.params.id);
+
+    return res.sendStatus(_httpStatus2.default.OK);
+  } catch (e) {
+    return res.status(_httpStatus2.default.BAD_REQUEST).json(e);
+  }
+}
+
 /***/ }),
 /* 16 */
 /***/ (function(module, exports, __webpack_require__) {
@@ -643,7 +683,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _mongoose = __webpack_require__(2);
+var _mongoose = __webpack_require__(3);
 
 var _mongoose2 = _interopRequireDefault(_mongoose);
 
@@ -722,6 +762,14 @@ PostSchema.statics = {
   list({ skip = 0, limit = 5 } = {}) {
     return this.find().sort({ createdAt: -1 }) // 내림차순
     .skip(skip).limit(limit).populate('user');
+  },
+
+  incFavoriteCount(postId) {
+    return this.findByIdAndUpdate(postId, { $inc: { favoriteCount: 1 } });
+  },
+
+  decFavoriteCount(postId) {
+    return this.findByIdAndUpdate(postId, { $inc: { favoriteCount: -1 } });
   }
 };
 
@@ -769,6 +817,9 @@ routes.get('/', postController.getPostsList);
 routes.patch('/:id', _auth.authJwt, (0, _expressValidation2.default)(_post3.default.updatePost), postController.updatePost);
 
 routes.delete('/:id', _auth.authJwt, postController.deletePost);
+
+// Favorites
+routes.post('/:id/favorite', _auth.authJwt, postController.favoritePost);
 
 exports.default = routes;
 
@@ -821,7 +872,7 @@ var _httpStatus = __webpack_require__(7);
 
 var _httpStatus2 = _interopRequireDefault(_httpStatus);
 
-var _user = __webpack_require__(3);
+var _user = __webpack_require__(2);
 
 var _user2 = _interopRequireDefault(_user);
 
