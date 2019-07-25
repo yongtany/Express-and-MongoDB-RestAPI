@@ -1,19 +1,3 @@
-# Make a Express MongoDB REST api
-
-I create this for helping people to make their own rest api and maybe use it as your boilerplate
-
-## Features
-
-This rest api gonna be for a Medium like website. This is a simple blog place where people can follow author and create a post. People can like the post and get notification when a user they follow create a new one.
-
-- Authentication local + jwt
-- User can create a post
-- User can delete is own post and update it
-- User can follow an other one
-- User get notification on following new post
-- User can like a post
-- User can see all the post they like
-
 <h1 align="center">
 <br>
   <a href="https://github.com/yongtany"><img src="https://i.imgur.com/C4X4AUB.png" alt="Express MongoDB Server" width="128"></a>
@@ -22,7 +6,7 @@ This rest api gonna be for a Medium like website. This is a simple blog place wh
 Express MongoDB Server
 </h1>
 
-<p align="center">A server boilerplate using GraphQL and MongoDB.</p>
+<p align="center">A server boilerplate using Express and MongoDB.</p>
 
 <p align="center">
   <a href="http://makeapullrequest.com">
@@ -37,7 +21,19 @@ Express MongoDB Server
 
 ## Introduction
 
-This is a server boilerplate using Express and MongoDB. Support subscriptions using NodeJS. 
+I create this for helping people to make their own rest api and maybe use it as your boilerplate
+
+## Features
+
+This rest api gonna be for a Medium like website. This is a simple blog place where people can follow author and create a post. People can like the post and get notification when a user they follow create a new one.
+
+- Authentication local + jwt
+- User can create a post
+- User can delete is own post and update it
+- User can follow an other one
+- User get notification on following new post
+- User can like a post
+- User can see all the post they like 
 
 ## Getting started
 
