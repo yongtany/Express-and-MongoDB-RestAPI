@@ -37,7 +37,7 @@ This rest api gonna be for a Medium like website. This is a simple blog place wh
 
 ## Getting started
 
-1. Clone this repo using `https://github.com/leonardomso/graphql-mongodb-server.git`
+1. Clone this repo using `https://github.com/yongtany/Express-and-MongoDB-RestAPI`
 2. Move to the appropriate directory: `cd express-mongodb-server`.
 4. Run `yarn` or `npm install` to install dependencies.
 5. Set `.env` file with your mongoURI.
