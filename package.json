@@ -28,7 +28,7 @@
     "passport-jwt": "^2.2.1",
     "passport-local": "^1.0.0",
     "slug": "^0.9.3",
-    "validator": "^10.9.0"
+    "validator": "^13.7.0"
   },
   "devDependencies": {
     "babel-core": "^6.24.1",
